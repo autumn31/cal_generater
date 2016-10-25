@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<meta charset="UTF-8">
+
+
+<html><head>
+<title>Left Frame</title>
+<script type="text/javascript" src="insta.js">
+</script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+</head>
+<body>
+	<button id = "load-more">Hit me</button>
+	<div id='instafeed' ></div>    
+<script type="text/javascript">
+	function build_cal(data){
+		images = data;
+        block = document.getElementById('instafeed');
+		for (k = 0, len2 = images.length; k < len2; k++) {
+   //          console.log('here');
+            d = document.createElement('div');
+            text = document.createTextNode(images[k].likes.count);
+			can = document.createElement('canvas');
+            d.appendChild(can);
+            d.appendChild(text);
+            block.appendChild(d);
+            add_pic(can,images[k].images['low_resolution'].url);
+		}
+	}
+    $("button").click(function(){
+        // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
+        //     console.log(data);
+        //});
+        location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://www.google.com&response_type=token";
+        
+    });
+
+    $('document').ready(function(){
+        console.log('after loading');
+    });
+
+	var result;
+	var loadButton = document.getElementById('load-more');
+    var feed = new Instafeed({
+        get: 'user',
+        userId: '1822225814',
+        accessToken: '1822225814.e30d30a.71c109de103041c4bbfffb3d493d0b59',
+        //template: '<a href="{{link}}"><img src="{{image}}" /></a>'
+        template: '{{likes}}<br><a><img src="{{image}}"</a><br>',
+        sortBy: 'most-liked',
+        mock: true,
+        success: function(response) {
+        	build_cal(response.data);
+        }
+        // after: function() {
+        //     // disable button if no more results to load
+        //     if (!this.hasNext()) {
+        //         loadButton.setAttribute('disabled', 'disabled');
+        //     }
+        // }
+    });
+
+    loadButton.addEventListener('click', function() {
+        feed.next();
+    });
+
+    feed.run();
+
+    function add_pic(can,imageUrl){
+        var back = new Image();
+        var ctx = can.getContext('2d');
+        back.src = 'http://upload.wikimedia.org/wikipedia/en/2/24/Lenna.png';
+        back.onload = function(){
+            console.log('called');
+            can.width = back.width;
+            can.height = back.height;
+            ctx.drawImage(back,0,0);
+            var frt = new Image();
+            console.log(k);
+            var image = imageUrl;
+            console.log(image);
+            frt.src = imageUrl;
+            frt.onload = function(){
+                ctx.drawImage(frt,0,0);
+            }
+        }
+    }
+</script>
+
+</body></html>
