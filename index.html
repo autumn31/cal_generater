@@ -38,19 +38,32 @@
         console.log('after loading');
     });
 
-	var result;
-	var loadButton = document.getElementById('load-more');
-    var feed = new Instafeed({
-        get: 'user',
-        userId: '1822225814',
-        accessToken: '1822225814.e30d30a.71c109de103041c4bbfffb3d493d0b59',
-        //template: '<a href="{{link}}"><img src="{{image}}" /></a>'
-        template: '{{likes}}<br><a><img src="{{image}}"</a><br>',
-        sortBy: 'most-liked',
-        mock: true,
-        success: function(response) {
-        	build_cal(response.data);
-        }
+    console.log(location.href.search('access'));
+    if (location.href.search('access')!=-1){
+        get_insta();
+    }else{
+        document.write('plz log-in');
+    }
+
+	function get_insta(){
+        var token = location.href.substr(location.href.search('=')+1);;
+        var id = token.substr(0,token.search('\\.'));
+        console.log(token.search('\\.'));
+        console.log(token);
+        console.log(id);
+        var result;
+        var loadButton = document.getElementById('load-more');
+        var feed = new Instafeed({
+            get: 'user',
+            userId: id,
+            accessToken: token,
+            //template: '<a href="{{link}}"><img src="{{image}}" /></a>'
+            template: '{{likes}}<br><a><img src="{{image}}"</a><br>',
+            sortBy: 'most-liked',
+            mock: true,
+            success: function(response) {
+                build_cal(response.data);
+            }
         // after: function() {
         //     // disable button if no more results to load
         //     if (!this.hasNext()) {
@@ -64,6 +77,7 @@
     });
 
     feed.run();
+    }
 
     function add_pic(can,imageUrl){
         var back = new Image();
