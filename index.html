@@ -11,23 +11,26 @@
 <body>
 	<button id = "load-more">Hit me</button>
 	<div id='instafeed' ></div>    
+
+
+</body>
 <script type="text/javascript">
     //document.body.style = "background: black";
-	function build_cal(data){
-		images = data;
+    function build_cal(data){
+        images = data;
         block = document.getElementById('instafeed');
-		for (k = 0, len2 = images.length; k < len2; k++) {
+        for (k = 0, len2 = images.length; k < len2; k++) {
    //          console.log('here');
-			can = document.createElement('canvas');
+            can = document.createElement('canvas');
             block.appendChild(can);
             add_pic(can,images[k].images['low_resolution'].url);
-		}
-	}
+        }
+    }
     $("button").click(function(){
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
         //     console.log(data);
         //});
-        location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=https://autumn31.github.io/insta_calandar&response_type=token";
+        location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=https://autumn31.github.io/cal_generater&response_type=token";
         
     });
 
@@ -42,7 +45,7 @@
         document.write('plz log-in');
     }
 
-	function get_insta(){
+    function get_insta(){
         var token = location.href.substr(location.href.search('=')+1);;
         var id = token.substr(0,token.search('\\.'));
         // console.log(token.search('\\.'));
@@ -98,4 +101,4 @@
     }
 </script>
 
-</body></html>
+</html>
