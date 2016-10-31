@@ -3,16 +3,42 @@
 
 
 <html><head>
-<title>autumn31.InstaCalendar</title>
+<title>autumn31.CalendarGenerator</title>
 <script type="text/javascript" src="insta.js">
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <style type="text/css">
 canvas {background: black;}
+button {
+    background: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+p {
+    margin: 4px 2px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    line-height: 20px;
+    /*border-color: black;
+    border-width: 2px;*/
+    /*border-style: solid;*/
+}
 </style>
 </head>
 <body>
-	<button id = "load-more">Hit me</button>
+    <h1 class="intro">Calendar Generator</h1>
+    <p class="intro">
+        Generate your own 2017 Calendar with your Instagram photos!!
+        <br>Please read the <a target="_blank" href="https://autumn31.github.io/cal_generater/notification.html">Private Policy</a> before your start
+    </p>
+	<button id = "button">Click Here to Generate</button>
 	<div id='instafeed' ></div>    
 
 
@@ -33,7 +59,7 @@ canvas {background: black;}
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
         //     console.log(data);
         //});
-        location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=https://autumn31.github.io/cal_generater&response_type=token";
+        location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=https://autumn31.github.io/cal_generater/index.html&response_type=token";
         
     });
 
@@ -45,6 +71,8 @@ canvas {background: black;}
     if (location.href.search('access')!=-1){
         get_insta();
     }else{
+        var b = document.getElementById('button');
+        b.disable = true;
         document.write('plz log-in');
     }
 
@@ -62,7 +90,7 @@ canvas {background: black;}
             accessToken: token,
             //template: '<a href="{{link}}"><img src="{{image}}" /></a>',
             resolution: "standard_resolution",
-            sortBy: 'most-recent',
+            sortBy: 'most-mineway',
             mock: true,
             success: function(response) {
                 console.log('start build');
@@ -74,10 +102,6 @@ canvas {background: black;}
         //         loadButton.setAttribute('disabled', 'disabled');
         //     }
         // }
-    });
-
-    loadButton.addEventListener('click', function() {
-        feed.next();
     });
 
     feed.run();
