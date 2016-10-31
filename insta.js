@@ -216,7 +216,7 @@
               throw new Error(eMsg);
             }
             imageUrl = imageObj.url;
-            imageUrl = imageUrl.replace('/s640x640','');
+            // imageUrl = imageUrl.replace('/s640x640','');
             //console.log(imageUrl);
             httpProtocol = window.location.protocol.indexOf("http") >= 0;
             if (httpProtocol && !this.options.useHttp) {

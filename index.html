@@ -7,6 +7,9 @@
 <script type="text/javascript" src="insta.js">
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<style type="text/css">
+canvas {background: black;}
+</style>
 </head>
 <body>
 	<button id = "load-more">Hit me</button>
@@ -23,7 +26,7 @@
    //          console.log('here');
             can = document.createElement('canvas');
             block.appendChild(can);
-            add_pic(can,images[k].images['low_resolution'].url);
+            add_pic(can,images[k].images['standard_resolution'].url,k+1);
         }
     }
     $("button").click(function(){
@@ -58,7 +61,7 @@
             userId: id,
             accessToken: token,
             //template: '<a href="{{link}}"><img src="{{image}}" /></a>',
-            //resolution: "standard_resolution",
+            resolution: "standard_resolution",
             sortBy: 'most-recent',
             mock: true,
             success: function(response) {
@@ -80,12 +83,21 @@
     feed.run();
     }
 
-    function add_pic(can,imageUrl){
+    function add_pic(can,imageUrl,i){
+        imageUrl = imageUrl.replace('/s640x640','');
         var back = new Image();
         var ctx = can.getContext('2d');
-        back.src = 'http://upload.wikimedia.org/wikipedia/en/2/24/Lenna.png';
+        var url = 'JPG/Kalender-';
+        if (i<10){
+            url+='0';
+            url+=i;
+        }else{
+            url+=i;
+        }
+        url+='\.jpg';
+        back.src = url;
         back.onload = function(){
-            console.log('called');
+            console.log(back.width,back.height);
             can.width = back.width;
             can.height = back.height;
             ctx.drawImage(back,0,0);
@@ -95,7 +107,16 @@
             console.log(image);
             frt.src = imageUrl;
             frt.onload = function(){
-                ctx.drawImage(frt,0,0);
+                var oc = document.createElement('canvas');
+                octx = oc.getContext('2d');
+                oc.width = frt.width/2;
+                oc.height = frt.height/2;
+                octx.drawImage(frt,0,0,oc.width,oc.height);
+                // octx.drawImage(oc,oc.width/2,oc.height/2);
+                // frt.width = can.width*0.4;
+                // frt.height = can.width*0.4;
+                console.log(frt.width,frt.height);
+                ctx.drawImage(oc, can.width*0.22,20,can.width*0.56,can.width*0.56);
             }
         }
     }
