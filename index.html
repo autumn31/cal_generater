@@ -3,34 +3,67 @@
 
 
 <html><head>
-<title>Left Frame</title>
+<title>autumn31.CalendarGenerator</title>
 <script type="text/javascript" src="insta.js">
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
+<style type="text/css">
+canvas {background: black;}
+button {
+    background: #4CAF50;
+    border: none;
+    color: white;
+    padding: 15px 32px;
+    text-align: center;
+    text-decoration: none;
+    display: inline-block;
+    font-size: 16px;
+    margin: 4px 2px;
+    cursor: pointer;
+}
+button:disabled {
+    background: gray;
+    cursor: default;
+}
+p {
+    margin: 4px 2px;
+    margin-top: 20px;
+    margin-bottom: 20px;
+    line-height: 20px;
+    /*border-color: black;
+    border-width: 2px;*/
+    /*border-style: solid;*/
+}
+</style>
 </head>
 <body>
-	<button id = "load-more">Hit me</button>
+    <h1 class="intro">Calendar Generator</h1>
+    <p class="intro">
+        Generate your own 2017 Calendar with your Instagram photos!!
+        <br>Please read the <a target="_blank" href="https://autumn31.github.io/cal_generater/notification.html">Private Policy</a> before your start
+        <br>Recommended Browser: Chrome
+    </p>
+	<button id = "button">Click Here to Generate</button>
 	<div id='instafeed' ></div>    
+</body>
 <script type="text/javascript">
-	function build_cal(data){
-		images = data;
+    //document.body.style = "background: black";
+    function build_cal(data){
+        images = data;
         block = document.getElementById('instafeed');
-		for (k = 0, len2 = images.length; k < len2; k++) {
+        for (k = 0, len2 = images.length; k < len2; k++) {
    //          console.log('here');
-            d = document.createElement('div');
-            text = document.createTextNode(images[k].likes.count);
-			can = document.createElement('canvas');
-            d.appendChild(can);
-            d.appendChild(text);
-            block.appendChild(d);
-            add_pic(can,images[k].images['low_resolution'].url);
-		}
-	}
+            can = document.createElement('canvas');
+            block.appendChild(can);
+            add_pic(can,images[k].images['standard_resolution'].url,k+1);
+        }
+    }
     $("button").click(function(){
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
         //     console.log(data);
         //});
-        location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://www.google.com&response_type=token";
+
+        location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=https://autumn31.github.io/cal_generater/index.html&response_type=token";
         
     });
 
@@ -38,19 +71,33 @@
         console.log('after loading');
     });
 
-	var result;
-	var loadButton = document.getElementById('load-more');
-    var feed = new Instafeed({
-        get: 'user',
-        userId: '1822225814',
-        accessToken: '1822225814.e30d30a.71c109de103041c4bbfffb3d493d0b59',
-        //template: '<a href="{{link}}"><img src="{{image}}" /></a>'
-        template: '{{likes}}<br><a><img src="{{image}}"</a><br>',
-        sortBy: 'most-liked',
-        mock: true,
-        success: function(response) {
-        	build_cal(response.data);
-        }
+    console.log(location.href.search('access'));
+    if (location.href.search('access')!=-1){
+        get_insta();
+        var b = document.getElementById('button');
+        b.disabled = true;
+    }
+
+    function get_insta(){
+        var token = location.href.substr(location.href.search('=')+1);;
+        var id = token.substr(0,token.search('\\.'));
+        // console.log(token.search('\\.'));
+        // console.log(token);
+        // console.log(id);
+        var result;
+        var loadButton = document.getElementById('load-more');
+        var feed = new Instafeed({
+            get: 'user',
+            userId: id,
+            accessToken: token,
+            //template: '<a href="{{link}}"><img src="{{image}}" /></a>',
+            resolution: "standard_resolution",
+            sortBy: 'most-mineway',
+            mock: true,
+            success: function(response) {
+                console.log('start build');
+                build_cal(response.data);
+            }
         // after: function() {
         //     // disable button if no more results to load
         //     if (!this.hasNext()) {
@@ -59,18 +106,24 @@
         // }
     });
 
-    loadButton.addEventListener('click', function() {
-        feed.next();
-    });
-
     feed.run();
+    }
 
-    function add_pic(can,imageUrl){
+    function add_pic(can,imageUrl,i){
+        imageUrl = imageUrl.replace('/s640x640','');
         var back = new Image();
         var ctx = can.getContext('2d');
-        back.src = 'http://upload.wikimedia.org/wikipedia/en/2/24/Lenna.png';
+        var url = 'JPG/Kalender-';
+        if (i<10){
+            url+='0';
+            url+=i;
+        }else{
+            url+=i;
+        }
+        url+='\.jpg';
+        back.src = url;
         back.onload = function(){
-            console.log('called');
+            console.log(back.width,back.height);
             can.width = back.width;
             can.height = back.height;
             ctx.drawImage(back,0,0);
@@ -80,10 +133,19 @@
             console.log(image);
             frt.src = imageUrl;
             frt.onload = function(){
-                ctx.drawImage(frt,0,0);
+                var oc = document.createElement('canvas');
+                octx = oc.getContext('2d');
+                oc.width = frt.width/2;
+                oc.height = frt.height/2;
+                octx.drawImage(frt,0,0,oc.width,oc.height);
+                // octx.drawImage(oc,oc.width/2,oc.height/2);
+                // frt.width = can.width*0.4;
+                // frt.height = can.width*0.4;
+                console.log(frt.width,frt.height);
+                ctx.drawImage(oc, can.width*0.22,20,can.width*0.56,can.width*0.56);
             }
         }
     }
 </script>
 
-</body></html>
+</html>
