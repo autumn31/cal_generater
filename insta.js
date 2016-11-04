@@ -54,11 +54,13 @@
         script = document.createElement('script');
         script.id = 'instafeed-fetcher';
         script.src = url || this._buildUrl();
+        // $('#debug').append(script.src+'<br>');
         header = document.getElementsByTagName('head');
         header[0].appendChild(script);
         instanceName = "instafeedCache" + this.unique;
         window[instanceName] = new Instafeed(this.options, this);
         window[instanceName].unique = this.unique;
+
       }
       return true;
     };
@@ -66,6 +68,9 @@
     Instafeed.prototype.parse = function(response) {
       var anchor, childNodeCount, childNodeIndex, childNodesArr, e, eMsg, fragment, header, htmlString, httpProtocol, i, image, imageObj, imageString, imageUrl, images, img, imgHeight, imgOrient, imgUrl, imgWidth, instanceName, j, k, len, len1, len2, node, parsedLimit, reverse, sortSettings, targetEl, tmpEl;
       //check if its success
+      if (debug){
+        console.log(response);
+      }
       if (typeof response !== 'object') {
         if ((this.options.error != null) && typeof this.options.error === 'function') {
           this.options.error.call(this, 'Invalid JSON data');
@@ -111,7 +116,7 @@
             });
             break;
           case 'recent':
-            response.data = this._sortBy(response.data, 'created_time', reverse);
+            // response.data = this._sortBy(response.data, 'created_time', reverse);
             break;
           case 'liked':
             response.data = this._sortBy(response.data, 'likes.count', reverse);
@@ -121,7 +126,8 @@
             break;
           case 'mineway':
             response.data = this._sortBy(response.data, 'likes.count', reverse);
-            response.data = response.data.slice(0,12);
+            console.log(response);
+            // response.data = response.data.slice(0,12);
             response.data.sort(function() {
               return 0.5 - Math.random();
             });
@@ -285,6 +291,12 @@
           }
           endpoint = "users/" + this.options.userId + "/media/recent";
           break;
+        case "test":
+          if (!this.options.self) {
+            throw new Error("Wrong Self");
+          }
+          endpoint = "users/self/feed";
+          break;
         default:
           throw new Error("Invalid option for get: '" + this.options.get + "'.");
       }
@@ -297,8 +309,18 @@
       if (this.options.limit != null) {
         final += "&count=" + this.options.limit;
       }
+      ///////////// mine code
+      if (this.options.max_t != null){
+        final+= "&max_timestamp=" + this.options.max_t/1000;
+      }
+      if (this.options.min_t != null){
+        final+= "&min_timestamp=" + this.options.min_t/1000;
+      }
+      //////////////
       final += "&callback=instafeedCache" + this.unique + ".parse";
-      //document.write(final);
+      if (debug){
+        $('div')[0].append(final);
+      }
       return final;
     };
 

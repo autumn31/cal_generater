@@ -9,6 +9,9 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <style type="text/css">
 canvas {background: black;}
+body{
+    background: #e7e7e7;
+}
 button {
     background: #4CAF50;
     border: none;
@@ -34,6 +37,13 @@ p {
     border-width: 2px;*/
     /*border-style: solid;*/
 }
+canvas{
+    max-width: 640px;
+}
+/*div{
+    max-width:100px;
+    width: 100px;
+}*/
 </style>
 </head>
 <body>
@@ -42,23 +52,21 @@ p {
         Generate your own 2017 Calendar with your Instagram photos!!
         <br>Please read the <a target="_blank" href="https://autumn31.github.io/cal_generater/notification.html">Private Policy</a> before your start
         <br>Recommended Browser: Chrome
+        <br>
+        <br>Notice: If you would like to share this application to your friends, copy only the <b><i>URL before "#accessToken"</b></i>
+        <br>Which is https://autumn31.github.io/cal_generater/index.html
     </p>
+
 	<button id = "button">Click Here to Generate</button>
+    <!-- <button id = 'next'>Next</button> -->
+    <div id='debug'></div>
 	<div id='instafeed' ></div>    
 </body>
 <script type="text/javascript">
     //document.body.style = "background: black";
-    function build_cal(data){
-        images = data;
-        block = document.getElementById('instafeed');
-        for (k = 0, len2 = images.length; k < len2; k++) {
-   //          console.log('here');
-            can = document.createElement('canvas');
-            block.appendChild(can);
-            add_pic(can,images[k].images['standard_resolution'].url,k+1);
-        }
-    }
-    $("button").click(function(){
+    var images=[];
+    debug = false;
+    $("#button").click(function(){
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
         //     console.log(data);
         //});
@@ -68,10 +76,12 @@ p {
     });
 
     $('document').ready(function(){
-        console.log('after loading');
+        if (debug){
+            console.log('after loading');
+        }
     });
 
-    console.log(location.href.search('access'));
+    //console.log(location.href.search('access'));
     if (location.href.search('access')!=-1){
         get_insta();
         var b = document.getElementById('button');
@@ -92,11 +102,27 @@ p {
             accessToken: token,
             //template: '<a href="{{link}}"><img src="{{image}}" /></a>',
             resolution: "standard_resolution",
-            sortBy: 'most-mineway',
+            sortBy: 'most-recent',
+            max_t: new Date(2016,12),
+            min_t: new Date(2016,9),
+            limit: 50,
             mock: true,
             success: function(response) {
-                console.log('start build');
-                build_cal(response.data);
+                // console.log('start build');
+                images = images.concat(response.data);
+                if (feed.hasNext()){
+                    // console.log('hasnext');
+                    // console.log(images);
+                    // console.log(response.data);
+                    feed.next();
+                }else{
+                    images = feed._sortBy(images,'likes.count',false);
+                    images = images.slice(0,12);
+                    images.sort(function() {
+                      return 0.5 - Math.random();
+                    });
+                    build_cal(images);
+                }
             }
         // after: function() {
         //     // disable button if no more results to load
@@ -104,45 +130,68 @@ p {
         //         loadButton.setAttribute('disabled', 'disabled');
         //     }
         // }
+
     });
 
+    // $('#next').click(function(){
+    //     feed.next();
+    // });
     feed.run();
+    }
+
+    function build_cal(data){
+        if (debug){
+            console.log('Length: '+data.length);
+        }
+        var images = data;
+        block = document.getElementById('instafeed');
+        for (k = 0, len2 = images.length; k < len2; k++) {
+   //          console.log('here');
+            can = document.createElement('canvas');
+            block.appendChild(can);
+            add_pic(can,images[k].images['standard_resolution'].url,k+1);
+            if (debug){
+                $('#instafeed').append(('<br>Likes: '+images[k].likes.count));
+                $('#instafeed').append('<br>Date: '+new Date(images[k].created_time*1000));
+            }
+        }
     }
 
     function add_pic(can,imageUrl,i){
         imageUrl = imageUrl.replace('/s640x640','');
         var back = new Image();
         var ctx = can.getContext('2d');
-        var url = 'JPG/Kalender-';
+        var url = 'JPG1/Kalender-';
         if (i<10){
             url+='0';
             url+=i;
         }else{
             url+=i;
         }
-        url+='\.jpg';
+        url+='\.png';
         back.src = url;
         back.onload = function(){
-            console.log(back.width,back.height);
+            if (debug){
+                console.log(back.width,back.height);
+            }
             can.width = back.width;
             can.height = back.height;
             ctx.drawImage(back,0,0);
             var frt = new Image();
-            console.log(k);
             var image = imageUrl;
-            console.log(image);
+            if (debug){
+                console.log('imageUrl: '+image);
+            }
             frt.src = imageUrl;
             frt.onload = function(){
-                var oc = document.createElement('canvas');
-                octx = oc.getContext('2d');
-                oc.width = frt.width/2;
-                oc.height = frt.height/2;
-                octx.drawImage(frt,0,0,oc.width,oc.height);
+                // var oc = document.createElement('canvas');
+                // octx = oc.getContext('2d');
+                // oc.width = frt.width/2;
+                // oc.height = frt.height/2;
+                // octx.drawImage(frt,0,0,oc.width,oc.height);
                 // octx.drawImage(oc,oc.width/2,oc.height/2);
-                // frt.width = can.width*0.4;
-                // frt.height = can.width*0.4;
-                console.log(frt.width,frt.height);
-                ctx.drawImage(oc, can.width*0.22,20,can.width*0.56,can.width*0.56);
+                // console.log(frt.width,frt.height);
+                ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*200/1485,can.width*1300/1485,can.width*1300/1485);
             }
         }
     }
