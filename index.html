@@ -88,7 +88,7 @@ canvas{
     //document.body.style = "background: black";
     // var images=[];
     debug = false;
-    $("#acess").click(function(){
+    $("#access").click(function(){
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
         //     console.log(data);
         //});
@@ -213,7 +213,7 @@ canvas{
             sortBy: 'most-recent',
             max_t: new Date(y,i),
             min_t: new Date(sy,si),
-            limit: 2,
+            limit: 50,
             mock: true,
             success: function(response) {
                 console.log('response of '+y+', '+i);
