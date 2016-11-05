@@ -8,7 +8,6 @@
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <style type="text/css">
-canvas {background: black;}
 body{
     background: #e7e7e7;
 }
@@ -44,6 +43,27 @@ canvas{
     max-width:100px;
     width: 100px;
 }*/
+.loader {
+    margin: 30px;
+  border: 8px solid #f3f3f3;
+  border-radius: 50%;
+  border-top: 8px solid gray;
+  width: 40px;
+  height: 40px;
+  display: none;
+  -webkit-animation: spin 1s linear infinite;
+  animation: spin 1s linear infinite;
+}
+
+@-webkit-keyframes spin {
+  0% { -webkit-transform: rotate(0deg); }
+  100% { -webkit-transform: rotate(360deg); }
+}
+
+@keyframes spin {
+  0% { transform: rotate(0deg); }
+  100% { transform: rotate(360deg); }
+}
 </style>
 </head>
 <body>
@@ -56,23 +76,33 @@ canvas{
         <br>Notice: If you would like to share this application to your friends, copy only the <b><i>URL before "#accessToken"</b></i>
         <br>Which is https://autumn31.github.io/cal_generater/index.html
     </p>
-
-	<button id = "button">Click Here to Generate</button>
+    <button id="access">Get Access</button>
+	<button id = "top" style="display: none" title='Generate with 12 Top Likes Photo!!'>Top Likes Photos</button>
+    <button id="month" style="display: none" title='Generate with Best likes photo in each month!! Make sure you do have photos in each month'>Best of each month!</button>
     <!-- <button id = 'next'>Next</button> -->
+    <div class="loader"></div>
     <div id='debug'></div>
 	<div id='instafeed' ></div>    
 </body>
 <script type="text/javascript">
     //document.body.style = "background: black";
     var images=[];
-    debug = false;
-    $("#button").click(function(){
+    debug = true;
+    $("#acess").click(function(){
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
         //     console.log(data);
         //});
 
         location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=https://autumn31.github.io/cal_generater/index.html&response_type=token";
         
+    });
+
+    $("#top").click(function(){
+        $('.loader').show();
+        $('#instafeed').empty();
+        get_insta();
+        // var b = document.getElementById('button');
+        // b.disabled = true;
     });
 
     $('document').ready(function(){
@@ -83,10 +113,12 @@ canvas{
 
     //console.log(location.href.search('access'));
     if (location.href.search('access')!=-1){
-        get_insta();
-        var b = document.getElementById('button');
-        b.disabled = true;
+        $('#access').hide();
+        $('#top').show();
+        $('#month').show();
     }
+
+
 
     function get_insta(){
         var token = location.href.substr(location.href.search('=')+1);;
@@ -104,7 +136,7 @@ canvas{
             resolution: "standard_resolution",
             sortBy: 'most-recent',
             max_t: new Date(2016,12),
-            min_t: new Date(2016,9),
+            min_t: new Date(2016,11),
             limit: 50,
             mock: true,
             success: function(response) {
@@ -121,8 +153,12 @@ canvas{
                     images.sort(function() {
                       return 0.5 - Math.random();
                     });
+                    $('.loader').hide();
                     build_cal(images);
                 }
+            },
+            error: function(){
+                console.log('no images');
             }
         // after: function() {
         //     // disable button if no more results to load
@@ -147,13 +183,19 @@ canvas{
         block = document.getElementById('instafeed');
         for (k = 0, len2 = images.length; k < len2; k++) {
    //          console.log('here');
-            can = document.createElement('canvas');
+            var can = document.createElement('canvas');
             block.appendChild(can);
             add_pic(can,images[k].images['standard_resolution'].url,k+1);
             if (debug){
                 $('#instafeed').append(('<br>Likes: '+images[k].likes.count));
                 $('#instafeed').append('<br>Date: '+new Date(images[k].created_time*1000));
             }
+        }
+    }
+
+    function build_best(data){
+        for (k=0; k<12;k++){
+
         }
     }
 

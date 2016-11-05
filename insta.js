@@ -89,7 +89,11 @@
       }
       if (response.data.length === 0) {
         if ((this.options.error != null) && typeof this.options.error === 'function') {
-          this.options.error.call(this, 'No images were returned from Instagram');
+          // this.options.error.call(this, 'No images were returned from Instagram');
+          if (debug){
+            console.log("no image return");
+          }
+          this.options.success.call(this,response);
           return false;
         } else {
           throw new Error('No images were returned from Instagram');
@@ -319,7 +323,7 @@
       //////////////
       final += "&callback=instafeedCache" + this.unique + ".parse";
       if (debug){
-        $('div')[0].append(final);
+        $('#debug').append(final);
       }
       return final;
     };
