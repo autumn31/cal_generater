@@ -8,11 +8,21 @@
 </script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.12.4/jquery.min.js"></script>
 <style type="text/css">
+@font-face {
+    font-family: 'font02';
+    src: url('kai-pc.ttf');
+}
 body{
     background: #e7e7e7;
 }
+h1{
+    font-size: 24px;
+}
 button {
-    background: #4CAF50;
+
+    width: 250px;
+    /*background: #4CAF50;*/
+    background: gray;
     border: none;
     color: white;
     padding: 15px 32px;
@@ -28,6 +38,8 @@ button:disabled {
     cursor: default;
 }
 p {
+    font-family: Times New Roman, serif;
+    font-size: 16px;
     margin: 4px 2px;
     margin-top: 20px;
     margin-bottom: 20px;
@@ -37,6 +49,7 @@ p {
     /*border-style: solid;*/
 }
 canvas{
+    font-family: font02;
     max-width: 640px;
 }
 /*div{
@@ -68,6 +81,9 @@ canvas{
 </head>
 <body>
     <h1 class="intro">Calendar Generator</h1>
+    <p>
+        <a href="intro.html" target="_blank">使用說明請點我</a>
+    </p>
     <p class="intro">
         Generate your own 2017 Calendar with your Instagram photos!!
         <br>Please read the <a target="_blank" href="https://autumn31.github.io/cal_generater/notification.html">Private Policy</a> before your start
@@ -80,6 +96,7 @@ canvas{
 	<button id = "top" style="display: none" title='Generate with 12 Top Likes Photo!!'>Top Likes Photos</button>
     <button id="month" style="display: none" title='Generate with Best likes photo in each month!! Make sure you do have photos in each month'>Best of each month!</button>
     <!-- <button id = 'next'>Next</button> -->
+    <!-- <div style="font-family: font2;"></div> -->
     <div class="loader"></div>
     <div id='debug'></div>
 	<div id='instafeed' ></div>    
@@ -88,6 +105,7 @@ canvas{
     //document.body.style = "background: black";
     // var images=[];
     debug = false;
+    drawtext = false;
     $("#access").click(function(){
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
         //     console.log(data);
@@ -216,23 +234,27 @@ canvas{
             limit: 50,
             mock: true,
             success: function(response) {
-                console.log('response of '+y+', '+i);
-                // if (feed.hasNext()){
-                //     feed.next();
-                // }
+                if (debug){
+                    console.log('response of '+y+', '+i);
+                }
+                if (feed.hasNext()){
+                    feed.next();
+                }
                 images = images.concat(response.data);
-                if (y===2016){
+                if (y!==2016){
                     images = images.concat(response.data);
                     get_insta_by_month(images,2015,i);
                 }else{
                     feed._sortBy(images,'likes.count',false);
                     // var can = document.createElement('canvas');
                     // $('#instafeed').append(can);
-                    console.log('adding images of '+i);
+                    if (debug){
+                        console.log('adding images of '+i);
+                    }
                     if (images[0]===undefined){
                         add_pic(document.getElementById('can'+i),'',i);
                     }else{
-                        add_pic(document.getElementById('can'+i),images[0].images['standard_resolution'].url,i);
+                        add_pic(document.getElementById('can'+i),images[0],i);
                     }
                     
                 }
@@ -261,11 +283,11 @@ canvas{
         }
         var images = data;
         block = document.getElementById('instafeed');
-        for (k = 0, len2 = images.length; k < len2; k++) {
+        for (k = 0, len2 = images.length; k < 1; k++) {
    //          console.log('here');
             var can = document.createElement('canvas');
             block.appendChild(can);
-            add_pic(can,images[k].images['standard_resolution'].url,k+1);
+            add_pic(can,images[k],k+1);
             if (debug){
                 $('#instafeed').append(('<br>Likes: '+images[k].likes.count));
                 $('#instafeed').append('<br>Date: '+new Date(images[k].created_time*1000));
@@ -273,10 +295,13 @@ canvas{
         }
     }
 
-    function add_pic(can,imageUrl,i){
+    function add_pic(can,curImage,i){
+        console.log(curImage);
+        var text;
         var back = new Image();
         var ctx = can.getContext('2d');
         var url = 'JPG1/Kalender-';
+        // var curImage = image;
         if (i<10){
             url+='0';
             url+=i;
@@ -292,14 +317,18 @@ canvas{
             can.width = back.width;
             can.height = back.height;
             ctx.drawImage(back,0,0);
-            if (imageUrl!==''){
-                
-            }
             var frt = new Image();
-            imageUrl = imageUrl.replace('/s640x640','');
-            var image = imageUrl;
+            var imageUrl;
+            if (curImage!==''){
+                imageUrl = curImage.images['standard_resolution'].url.replace('/s640x640','');
+                if (drawtext){
+                    text = curImage.caption.text;
+                }
+            }else{
+                imagesUrl ='';
+            }
             if (debug){
-                console.log('imageUrl: '+image);
+                console.log('imageUrl: '+imageUrl);
             }
             frt.src = imageUrl;
             frt.onload = function(){
@@ -309,8 +338,22 @@ canvas{
                 // oc.height = frt.height/2;
                 // octx.drawImage(frt,0,0,oc.width,oc.height);
                 // octx.drawImage(oc,oc.width/2,oc.height/2);
-                // console.log(frt.width,frt.height);
+                // console.log(i);
+                //  console.log(frt.width,frt.height);
                 ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*200/1485,can.width*1300/1485,can.width*1300/1485);
+                if (drawtext){
+                    ctx.save();
+                    ctx.fillStyle = "white";
+                    ctx.font = "50px 標楷體";
+                    ctx.strokeStyle = 'black';
+                    ctx.lineWidth = 2;
+                    ctx.strokeText(text, can.width*(1-1300/1485)/2+20, can.width*1500/1485-20);
+                    ctx.fillText(text, can.width*(1-1300/1485)/2+20, can.width*1500/1485-20);
+
+                    ctx.restore();
+                }
+                // ctx.fill();
+                // ctx.stroke();
             }
         }
     }
