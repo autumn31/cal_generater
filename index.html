@@ -105,7 +105,7 @@ canvas{
 <script type="text/javascript">
     //document.body.style = "background: black";
     // var images=[];
-    debug = true;
+    debug = false;
     drawtext = false;
     $("#access").click(function(){
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
@@ -242,11 +242,11 @@ canvas{
                     feed.next();
                 }
                 images = images.concat(response.data);
-                if (y===2016){
+                if (y===2016&&images.length<8){
                     images = images.concat(response.data);
                     get_insta_by_month(images,2015,i);
                 }else{
-                    console.log(images);
+                    //console.log(images);
                     feed._sortBy(images,'likes.count',false);
                     // var can = document.createElement('canvas');
                     // $('#instafeed').append(can);
