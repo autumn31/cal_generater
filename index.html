@@ -113,7 +113,7 @@ canvas{
         //     console.log(data);
         //});
 
-        location.href = "https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=https://autumn31.github.io/cal_generater/index.html&response_type=token";
+        location.href = "https://api.instagram.com/oauth/authorize/?client_id=2c84bc1eb05f4a7eb34aaeed5e1368e0&redirect_uri=http://localhost&response_type=token";
         
     });
 
@@ -174,9 +174,12 @@ canvas{
             resolution: "standard_resolution",
             sortBy: 'most-recent',
             max_t: new Date(2016,12),
-            min_t: new Date(2016,10),
+            min_t: new Date(2015,11),
             limit: 50,
-            mock: true,
+            mock: false,
+            // success: function(response){
+            //     console.log(response.data);
+            // },
             success: function(response) {
                 // console.log('start build');
                 images = images.concat(response.data);
@@ -186,11 +189,11 @@ canvas{
                     // console.log(response.data);
                     feed.next();
                 }else{
-                    images = feed._sortBy(images,'likes.count',false);
-                    images = images.slice(0,12);
-                    images.sort(function() {
-                      return 0.5 - Math.random();
-                    });
+                    // images = feed._sortBy(images,'likes.count',false);
+                    // images = images.slice(0,12);
+                    // images.sort(function() {
+                    //   return 0.5 - Math.random();
+                    // });
                     $('.loader').hide();
                     build_cal(images);
                 }
@@ -285,7 +288,7 @@ canvas{
         }
         var images = data;
         block = document.getElementById('instafeed');
-        for (k = 0, len2 = images.length; k < 1; k++) {
+        for (k = 0, len2 = images.length; k < len2; k++) {
    //          console.log('here');
             var can = document.createElement('canvas');
             block.appendChild(can);
@@ -302,7 +305,7 @@ canvas{
         var text;
         var back = new Image();
         var ctx = can.getContext('2d');
-        var url = 'JPG1/Kalender-';
+        var url = 'JPG/Calender-';
         // var curImage = image;
         if (i<10){
             url+='0';
@@ -342,7 +345,14 @@ canvas{
                 // octx.drawImage(oc,oc.width/2,oc.height/2);
                 // console.log(i);
                 //  console.log(frt.width,frt.height);
-                ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*200/1485,can.width*1300/1485,can.width*1300/1485);
+                if (frt.width > frt.height) {
+                  ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*(1300*(1-frt.height/frt.width)/2+200)/1485,can.width*1300/1485,can.width*1300*frt.height/frt.width/1485);
+                }else if (frt.width < frt.height) {
+                  ctx.drawImage(frt, can.width*(1485-1300+1300*(1-frt.width/frt.height))/1485/2,can.width*200/1485,can.width*1300*frt.width/frt.height/1485,can.width*1300/1485);
+                }else{
+                    ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*200/1485,can.width*1300/1485,can.width*1300/1485);
+                }
+                
                 if (drawtext){
                     // ctx.save();
                     ctx.fillStyle = "white";
