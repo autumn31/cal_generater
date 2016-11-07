@@ -49,8 +49,9 @@ p {
     /*border-style: solid;*/
 }
 canvas{
-    font-family: font02;
+    font-family: Kaiti TC;
     max-width: 640px;
+    font-size: 50px;
 }
 /*div{
     max-width:100px;
@@ -173,7 +174,7 @@ canvas{
             resolution: "standard_resolution",
             sortBy: 'most-recent',
             max_t: new Date(2016,12),
-            min_t: new Date(2015,11),
+            min_t: new Date(2016,10),
             limit: 50,
             mock: true,
             success: function(response) {
@@ -242,7 +243,7 @@ canvas{
                     feed.next();
                 }
                 images = images.concat(response.data);
-                if (y===2016){
+                if (y===2016 && images.length<10){
                     images = images.concat(response.data);
                     get_insta_by_month(images,2015,i);
                 }else{
@@ -284,7 +285,7 @@ canvas{
         }
         var images = data;
         block = document.getElementById('instafeed');
-        for (k = 0, len2 = images.length; k < len2; k++) {
+        for (k = 0, len2 = images.length; k < 1; k++) {
    //          console.log('here');
             var can = document.createElement('canvas');
             block.appendChild(can);
@@ -343,15 +344,15 @@ canvas{
                 //  console.log(frt.width,frt.height);
                 ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*200/1485,can.width*1300/1485,can.width*1300/1485);
                 if (drawtext){
-                    ctx.save();
+                    // ctx.save();
                     ctx.fillStyle = "white";
-                    ctx.font = "50px 標楷體";
+                    ctx.font = "50px Kaiti TC";
                     ctx.strokeStyle = 'black';
                     ctx.lineWidth = 2;
                     ctx.strokeText(text, can.width*(1-1300/1485)/2+20, can.width*1500/1485-20);
                     ctx.fillText(text, can.width*(1-1300/1485)/2+20, can.width*1500/1485-20);
 
-                    ctx.restore();
+                    // ctx.restore();
                 }
                 // ctx.fill();
                 // ctx.stroke();
