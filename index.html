@@ -3,6 +3,7 @@
 
 
 <html><head>
+<meta property="og:image" content="preview.jpg" />
 <title>autumn31.CalendarGenerator</title>
 <script type="text/javascript" src="insta.js">
 </script>
@@ -242,10 +243,11 @@ canvas{
                     feed.next();
                 }
                 images = images.concat(response.data);
-                if (y===2016){
+                if (y===2016&&images.length<8){
                     images = images.concat(response.data);
                     get_insta_by_month(images,2015,i);
                 }else{
+                    //console.log(images);
                     feed._sortBy(images,'likes.count',false);
                     // var can = document.createElement('canvas');
                     // $('#instafeed').append(can);
@@ -297,7 +299,6 @@ canvas{
     }
 
     function add_pic(can,curImage,i){
-        console.log(curImage);
         var text;
         var back = new Image();
         var ctx = can.getContext('2d');
@@ -341,7 +342,13 @@ canvas{
                 // octx.drawImage(oc,oc.width/2,oc.height/2);
                 // console.log(i);
                 //  console.log(frt.width,frt.height);
-                ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*200/1485,can.width*1300/1485,can.width*1300/1485);
+                if (frt.width > frt.height) {
+                  ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*(1300*(1-frt.height/frt.width)/2+200)/1485,can.width*1300/1485,can.width*1300*frt.height/frt.width/1485);
+                }else if (frt.width < frt.height) {
+                  ctx.drawImage(frt, can.width*(1485-1300+1300*(1-frt.width/frt.height))/1485/2,can.width*200/1485,can.width*1300*frt.width/frt.height/1485,can.width*1300/1485);
+                }else{
+                    ctx.drawImage(frt, can.width*(1-1300/1485)/2,can.width*200/1485,can.width*1300/1485,can.width*1300/1485);
+                }
                 if (drawtext){
                     ctx.save();
                     ctx.fillStyle = "white";
