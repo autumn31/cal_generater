@@ -3,7 +3,6 @@
 
 
 <html><head>
-<meta property="og:image" content="preview.jpg" />
 <title>autumn31.CalendarGenerator</title>
 <script type="text/javascript" src="insta.js">
 </script>
@@ -85,7 +84,7 @@ canvas{
     <h1 class="intro">Calendar Generator</h1>
     <p>
         <a href="intro.html" target="_blank">使用說明請點我</a>
-        <br>目前只能產生方形圖
+        <br>已支援非方形圖
     </p>
     <p class="intro">
         Generate your own 2017 Calendar with your Instagram photos!!
@@ -238,7 +237,7 @@ canvas{
             max_t: new Date(y,i),
             min_t: new Date(sy,si),
             limit: 50,
-            mock: true,
+            mock: false,
             success: function(response) {
                 if (debug){
                     console.log('response of '+y+', '+i);
@@ -306,7 +305,7 @@ canvas{
         var text;
         var back = new Image();
         var ctx = can.getContext('2d');
-        var url = 'JPG/Calender-';
+        var url = 'JPG1/Kalender-';
         // var curImage = image;
         if (i<10){
             url+='0';
