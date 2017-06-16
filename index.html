@@ -135,9 +135,6 @@ canvas{
             $('#instafeed').append(can);
 
         }
-        for (i=0;i<10;i++){
-            console.log('恩哈哈哈哈')
-        }
         for (i=1;i<13;i++){
             var images = [];
             get_insta_by_month(images,curYear,i);
@@ -177,8 +174,8 @@ canvas{
             //template: '<a href="{{link}}"><img src="{{image}}" /></a>',
             resolution: "standard_resolution",
             sortBy: 'most-recent',
-            max_t: new Date(2017,12),
-            min_t: new Date(2015,11),
+            max_t: new Date(curYear,12),
+            min_t: new Date(curYear-2,11),
             limit: 50,
             mock: true,
             success: function(response) {
@@ -217,7 +214,8 @@ canvas{
     feed.run();
     }
 
-    function get_insta_by_month(images,y,i){
+    function get_insta_by_month(images,cury,i){
+        var y=cury;
         var sy=y;
         var si=i-1;
         if (i===1){
@@ -247,7 +245,7 @@ canvas{
                     feed.next();
                 }
                 images = images.concat(response.data);
-                if (y!=2015&&images.length<8){
+                if (y!=cury-2&&images.length<8){
                     images = images.concat(response.data);
                     y--;
                     get_insta_by_month(images,y,i);
