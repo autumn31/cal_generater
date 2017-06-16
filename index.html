@@ -109,6 +109,7 @@ canvas{
     drawtext = false;
     var curDateObj = new Date();
     var curYear = curDateObj.getFullYear();
+    var curMonth = curDateObj.getMonth();
     $("#access").click(function(){
         // $.get("https://api.instagram.com/oauth/authorize/?client_id=e30d30a12f984aeb861617214be657eb&redirect_uri=http://localhost&response_type=token", function(data, status){
         //     console.log(data);
@@ -174,8 +175,8 @@ canvas{
             //template: '<a href="{{link}}"><img src="{{image}}" /></a>',
             resolution: "standard_resolution",
             sortBy: 'most-recent',
-            max_t: new Date(curYear,12),
-            min_t: new Date(curYear-2,11),
+            max_t: new Date(curYear,curMonth),
+            min_t: new Date(curYear-2,curMonth-1),
             limit: 50,
             mock: true,
             success: function(response) {
