@@ -89,7 +89,9 @@ function get_insta(){
                 // console.log(response.data);
                 feed.next();
             }else{
-                console.log("hi")
+                if (debug){
+                    console.log("hi")
+                }
                 images = feed._sortBy(images,'likes.count',false);
                 images = images.slice(0,12);
                 images.sort(function() {
