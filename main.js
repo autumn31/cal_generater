@@ -45,6 +45,7 @@ if (location.href.search('access')!=-1){
     $('#access').hide();
     $('#top').show();
     $('#month').show();
+    $('#pics').show();
 }
 
 
