@@ -273,7 +273,7 @@ function add_pics_pics(can, images){
         var frts = []
         frts[0] = new Image()
         frts[1] = new Image()
-        for (i = 0 ; i < 2 ; i ++){
+        for (let i = 0 ; i < 2 ; i ++){
             var curImage = images[i]
             if (curImage!=null){
                 imageUrl = curImage.images['standard_resolution'].url.replace('/s640x640','');
@@ -286,10 +286,9 @@ function add_pics_pics(can, images){
             if (debug){
                 console.log('imageUrl: '+imageUrl);
             }
-            var frt = frts[i]
+            let frt = frts[i]
             frt.src = imageUrl
-            frt.onload = (function(i,ctx,frt,can){
-                return function(){
+            frt.onload = function(){
                 if(debug){
                     console.log("Drawing frt_pic: ", i, frt.src)
                     console.log("Ctx", ctx)
@@ -306,8 +305,7 @@ function add_pics_pics(can, images){
                     }
                     ctx.drawImage(frt, can.width*( (1-(1600+12)/1812)/4 + (900+12)/1812*(i) ),can.width*100/1812 ,can.width*(800/1812),can.width*800/1812);
                 }
-                }
-            })(i,ctx,frt,can)
+            }
         }
     }
 }
