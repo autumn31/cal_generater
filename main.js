@@ -1,6 +1,6 @@
 //document.body.style = "background: black";
 // var images=[];
-debug = true;
+debug = false;
 drawtext = false;
 var curDateObj = new Date();
 var curYear = curDateObj.getFullYear();
