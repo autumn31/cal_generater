@@ -1,6 +1,6 @@
 //document.body.style = "background: black";
 // var images=[];
-debug = false;
+debug = true;
 drawtext = false;
 var curDateObj = new Date();
 var curYear = curDateObj.getFullYear();
@@ -190,14 +190,15 @@ function get_insta_by_month(images,cury,i){
     feed.run();
 }
 
-function get_pics(cury,i){
-    var y=cury;
-    var sy=y;
-    var si=i-1;
-    if (i===1){
-        sy=y-1;
-        si=12;
-    }
+function get_pics(){
+    date = new Date()
+    sdate = new Date()
+    sdate.setMonth(date.getMonth()-1)
+    y = date.getFullYear()
+    i = date.getMonth()
+    sy = sdate.getFullYear()
+    si = sdate.getMonth()
+
     var token = location.href.substr(location.href.search('=')+1);
     var id = token.substr(0,token.search('\\.'));
     var images=[];
@@ -214,7 +215,7 @@ function get_pics(cury,i){
         mock: true,
         success: function(response) {
             if (debug){
-                console.log('response of '+y+', '+i);
+                console.log('response of ', date, sdate);
             }
             images = images.concat(response.data)
             if (feed.hasNext()){
