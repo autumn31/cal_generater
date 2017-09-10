@@ -196,8 +196,10 @@ function get_pics(){
     sdate.setMonth(date.getMonth()-1)
     y = date.getFullYear()
     i = date.getMonth()
+    d = date.getDate()
     sy = sdate.getFullYear()
     si = sdate.getMonth()
+    sd = sdate.getDate()
 
     var token = location.href.substr(location.href.search('=')+1);
     var id = token.substr(0,token.search('\\.'));
@@ -209,8 +211,8 @@ function get_pics(){
         //template: '<a href="{{link}}"><img src="{{image}}" /></a>',
         resolution: "standard_resolution",
         sortBy: 'most-recent',
-        max_t: new Date(y,i),
-        min_t: new Date(sy,si),
+        max_t: new Date(y,i,d),
+        min_t: new Date(sy,si,sd),
         limit: 50,
         mock: true,
         success: function(response) {
