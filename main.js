@@ -296,18 +296,13 @@ function add_pics_pics(can, images){
                     console.log("Drawing frt_pic: ", i, frt.src)
                     console.log("Ctx", ctx)
                 }
-                if (frt.width > frt.height) {
-                    ctx.drawImage(frt, can.width/2*(1-1300/1485)/2,can.width*(1300*(1-frt.height/frt.width)/2+200)/1485,can.width*1300/1485,can.width*1300*frt.height/frt.width/1485);
-                }else if (frt.width < frt.height) {
-                    ctx.drawImage(frt, can.width*(1485-1300+1300*(1-frt.width/frt.height))/1485/2,can.width*200/1485,can.width*1300*frt.width/frt.height/1485,can.width*1300/1485);
-                }else{
-                    if (debug){
-                        console.log("Drawing Square pics")
-                        console.log("Canvas Length and Width: ", can.width, can.height)
-                        console.log("Params: ", can.width*( (1-(1600+12)/1812)/4 + (900+12)/1812*(i) ),can.width*100/1812 ,can.width*(800/1812),can.width*800/1812)
-                    }
-                    ctx.drawImage(frt, can.width*( (1-(1600+12)/1812)/4 + (900+12)/1812*(i) ),can.width*100/1812 ,can.width*(800/1812),can.width*800/1812);
-                }
+                ans = getDrawingParas(frt, 50+(900+12)*i, 100, 800)
+                x = ans[0]
+                y = ans[1]
+                dx = ans[2]
+                dy = ans[3]
+                console.log(ans)
+                ctx.drawImage(frt, x,y,dx,dy);
             }
         }
     }
@@ -378,5 +373,25 @@ function add_pic(can,curImage,i){
             // ctx.fill();
             // ctx.stroke();
         }
+    }
+}
+
+function getDrawingParas(frt, x,y, d){
+    w = frt.width
+    h = frt.height
+    x1 = x
+    y1 = y
+    if (w >= h){
+        r = d / w
+        w = d
+        h = h * r
+        y1 += (h-d)/2
+        return [x1,y1,w,h]
+    }else{
+        r = d / h
+        h = d
+        w = w * r
+        x1 += (w-d)/2
+        return [x1,y1,w,h]
     }
 }
