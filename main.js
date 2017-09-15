@@ -385,13 +385,13 @@ function getDrawingParas(frt, x,y, d){
         r = d / w
         w = d
         h = h * r
-        y1 += (h-d)/2
+        y1 += (d-h)/2
         return [x1,y1,w,h]
     }else{
         r = d / h
         h = d
         w = w * r
-        x1 += (w-d)/2
+        x1 += (d-w)/2
         return [x1,y1,w,h]
     }
 }
