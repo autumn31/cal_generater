@@ -2,6 +2,7 @@
 // var images=[];
 debug = false;
 drawtext = false;
+blood = true
 var curDateObj = new Date();
 var curYear = curDateObj.getFullYear();
 var curMonth = curDateObj.getMonth()+1;
@@ -296,7 +297,12 @@ function add_pics_pics(can, images){
                     console.log("Drawing frt_pic: ", i, frt.src)
                     console.log("Ctx", ctx)
                 }
-                ans = getDrawingParas(frt, 50+(900+12)*i, 100, 800)
+                var ans
+                if (blood){
+                    ans = getDrawingParas(frt, 50+50+(775+100+12)*i, 100, 775)
+                }else {
+                    ans = getDrawingParas(frt, 50+(900+12)*i, 100, 800)
+                }
                 x = ans[0]
                 y = ans[1]
                 dx = ans[2]
