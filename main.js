@@ -194,6 +194,7 @@ function get_insta_by_month(images,cury,i){
 function get_pics(){
     date = new Date()
     sdate = new Date()
+    date.setDate(date.getDate() + 1)
     sdate.setMonth(date.getMonth()-1)
     y = date.getFullYear()
     i = date.getMonth()
@@ -318,7 +319,7 @@ function add_pic(can,curImage,i){
     var text;
     var back = new Image();
     var ctx = can.getContext('2d');
-    var url = 'JPG1/Kalender-';
+    var url = 'JPG2/Kalender-';
     // var curImage = image;
     if (i<10){
         url+='0';
