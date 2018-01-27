@@ -281,7 +281,7 @@ function add_pics_pics(can, images){
         for (let i = 0 ; i < 2 ; i ++){
             var curImage = images[i]
             if (curImage!=null){
-                imageUrl = curImage.images['standard_resolution'].url.replace('/s640x640','');
+                imageUrl = curImage.images['standard_resolution'].url.replace('/s640x640','').replace('/vp','');
                 if (drawtext){
                     text = curImage.caption.text;
                 }
