@@ -339,7 +339,7 @@ function add_pic(can,curImage,i){
         var frt = new Image();
         var imageUrl;
         if (curImage!==''){
-            imageUrl = curImage.images['standard_resolution'].url.replace('/s640x640','');
+            imageUrl = curImage.images['standard_resolution'].url.replace('/s640x640','').replace('/vp','');
             if (drawtext){
                 text = curImage.caption.text;
             }
