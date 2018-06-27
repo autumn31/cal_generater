@@ -281,7 +281,7 @@ function add_pics_pics(can, images){
         for (let i = 0 ; i < 2 ; i ++){
             var curImage = images[i]
             if (curImage!=null){
-                imageUrl = curImage.images['standard_resolution'].url.replace('/s640x640','').replace('/vp','');
+                imageUrl = curImage.images['standard_resolution'].url;
                 if (drawtext){
                     text = curImage.caption.text;
                 }
@@ -339,7 +339,8 @@ function add_pic(can,curImage,i){
         var frt = new Image();
         var imageUrl;
         if (curImage!==''){
-            imageUrl = curImage.images['standard_resolution'].url.replace('/s640x640','').replace('/vp','');
+            // console.log(imageUrl)
+            imageUrl = curImage.images['standard_resolution'].url;
             if (drawtext){
                 text = curImage.caption.text;
             }
